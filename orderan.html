@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulam Carinderya - Order Now</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #FF6347;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .order-form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            display: block;
+        }
+
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e5533f;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .order-summary h2 {
+            color: #FF6347;
+            font-size: 2rem;
+        }
+
+        .order-summary p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            color: #FF6347;
+        }
+
+        .total-cost {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #FF6347;
+            margin-top: 15px;
+        }
+
+        .share-link {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ulam Carinderya - Order Your Favorite Ulam!</h1>
+
+    <div class="order-form">
+        <form action="#" method="POST" id="order-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">Contact Number</label>
+                <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ulam">Select Your Ulam</label>
+                <select id="ulam" name="ulam" required>
+                    <option value="adobo" data-price="150">Adobo (Pork/Chicken) - ₱150</option>
+                    <option value="sinigang" data-price="180">Sinigang (Pork/Shrimp) - ₱180</option>
+                    <option value="caldereta" data-price="200">Caldereta (Beef) - ₱200</option>
+                    <option value="bicolexpress" data-price="160">Bicol Express - ₱160</option>
+                    <option value="kare-kare" data-price="220">Kare-Kare (Beef/Pork) - ₱220</option>
+                    <option value="laing" data-price="140">Laing - ₱140</option>
+                    <option value="lechon" data-price="250">Lechon Kawali - ₱250</option>
+                    <option value="pancit" data-price="130">Pancit - ₱130</option>
+                    <option value="sisig" data-price="190">Sisig (Pork/Chicken) - ₱190</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="additional-notes">Additional Notes (Optional)</label>
+                <textarea id="additional-notes" name="additional-notes" rows="4" placeholder="Special requests or notes"></textarea>
+            </div>
+
+            <button type="submit" onclick="submitOrder(event)">Place Order</button>
+        </form>
+    </div>
+
+    <div class="order-summary" id="order-summary" style="display: none;">
+        <h2>Order Summary</h2>
+        <p><strong>Name:</strong> <span id="summary-name"></span></p>
+        <p><strong>Contact:</strong> <span id="summary-contact"></span></p>
+        <p><strong>Ulam Ordered:</strong> <span id="summary-ulam"></span></p>
+        <p><strong>Quantity:</strong> <span id="summary-quantity"></span></p>
+        <p><strong>Additional Notes:</strong> <span id="summary-notes"></span></p>
+        <p class="total-cost">Total Cost: ₱<span id="total-cost"></span></p>
+        <div class="share-link">
+            <p>Share your order details with others:</p>
+            <a id="share-link" href="#" target="_blank">Share Link</a>
+        </div>
+    </div>
+
+    <script>
+        function submitOrder(event) {
+            event.preventDefault();
+
+            var name = document.getElementById('name').value;
+            var contact = document.getElementById('contact').value;
+            var ulam = document.getElementById('ulam').value;
+            var quantity = document.getElementById('quantity').value;
+            var additionalNotes = document.getElementById('additional-notes').value;
+
+            var ulamPrice = document.querySelector(`#ulam option[value="${ulam}"]`).getAttribute('data-price');
+            var totalCost = ulamPrice * quantity;
+
+            document.getElementById('summary-name').textContent = name;
+            document.getElementById('summary-contact').textContent = contact;
+            document.getElementById('summary-ulam').textContent = ulam;
+            document.getElementById('summary-quantity').textContent = quantity;
+            document.getElementById('summary-notes').textContent = additionalNotes || 'None';
+            document.getElementById('total-cost').textContent = totalCost;
+
+            // Create a shareable link with the order details
+            var shareLink = `mailto:?subject=Ulam%20Carinderya%20Order%20Summary&body=Name:%20${name}%0AContact:%20${contact}%0AUlam%20Ordered:%20${ulam}%0AQuantity:%20${quantity}%0AAdditional%20Notes:%20${additionalNotes}%0ATotal%20Cost:%20₱${totalCost}`;
+            document.getElementById('share-link').setAttribute('href', shareLink);
+
+            document.getElementById('order-form').reset();
+            document.getElementById('order-summary').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
